@@ -14,3 +14,15 @@ def test_claude_to_findings():
     assert f.line == 113
     assert f.cwe == "CWE-79"
     assert f.severity == "HIGH"
+    assert f.message == "Reflected XSS"
+
+
+def test_claude_message_fallback():
+    data = {"findings": [
+        {"file": "lib.py", "line": 42, "cwe": "CWE-89", "severity": "CRITICAL",
+         "message": "fallback text"}
+    ]}
+    f = claude_to_findings(data)[0]
+    assert f.tool == "claude-security-review"
+    assert f.kind == "sast"
+    assert f.message == "fallback text"

@@ -14,3 +14,13 @@ def test_scntnms_to_findings():
     assert out[0].remediation == "upgrade to 2.17.1"
     assert out[1].kind == "sast"
     assert out[1].file == "app.py"
+
+
+def test_scntnms_invalid_kind_falls_back_to_sast():
+    data = {"findings": [
+        {"type": "unsupported", "file": "a.py", "line": 1},
+    ]}
+    out = scntnms_to_findings(data, tool="scntnms-standard")
+    assert len(out) == 1
+    assert out[0].kind == "sast"
+    assert out[0].file == "a.py"
