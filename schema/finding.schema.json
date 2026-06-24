@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Finding",
+  "type": "object",
+  "required": ["tool", "kind"],
+  "additionalProperties": false,
+  "properties": {
+    "tool": {"type": "string"},
+    "kind": {"enum": ["sast", "sca", "secret"]},
+    "file": {"type": ["string", "null"]},
+    "line": {"type": ["integer", "null"]},
+    "cwe": {"type": ["string", "null"]},
+    "severity": {"type": ["string", "null"]},
+    "category": {"type": ["string", "null"]},
+    "package": {"type": ["string", "null"]},
+    "version": {"type": ["string", "null"]},
+    "cve": {"type": ["string", "null"]},
+    "raw_id": {"type": ["string", "null"]},
+    "message": {"type": ["string", "null"]},
+    "remediation": {"type": ["string", "null"]}
+  }
+}
