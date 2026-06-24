@@ -49,3 +49,12 @@ def test_sca_match_by_name_version():
     res = match(findings, gt)
     assert len(res.sca_tp) == 1
     assert not res.sca_fn
+
+
+def test_unmatched_false_positive_decoy_is_silent():
+    gt = _gt(findings=[GroundTruthItem("F1", "app.py", 128, "CWE-79", "xss",
+                                       "HIGH", "false-positive")])
+    res = match([], gt)
+    assert res.fn == []
+    assert res.fp == []
+    assert res.tp == []
