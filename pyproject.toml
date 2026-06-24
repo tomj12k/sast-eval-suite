@@ -1,0 +1,27 @@
+[project]
+name = "eval-suite"
+version = "0.1.0"
+requires-python = ">=3.13"
+dependencies = ["pyyaml>=6.0", "jsonschema>=4.21"]
+
+[dependency-groups]
+dev = ["pytest>=8.0", "ruff>=0.6", "pyright>=1.1"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["harness/src/eval_suite"]
+
+[tool.pytest.ini_options]
+pythonpath = ["harness/src"]
+testpaths = ["harness/tests"]
+
+[tool.pyright]
+include = ["harness/src", "harness/tests"]
+pythonVersion = "3.13"
+
+[tool.ruff]
+target-version = "py313"
+src = ["harness/src"]
