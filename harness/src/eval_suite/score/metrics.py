@@ -62,6 +62,16 @@ def score_tool(
         for item in res.fn:
             class_fn[item.klass] = class_fn.get(item.klass, 0) + 1
 
+        # Attribute FP findings to a class via CWE -> class map from ground truth.
+        cwe_to_klass: dict[str, str] = {}
+        for item in gt.findings:
+            if item.cwe not in cwe_to_klass:
+                cwe_to_klass[item.cwe] = item.klass
+        for f in res.fp:
+            if f.cwe is not None and f.cwe in cwe_to_klass:
+                klass = cwe_to_klass[f.cwe]
+                class_fp[klass] = class_fp.get(klass, 0) + 1
+
         # Triage: each labeled SAST item is one decision.
         matched_ids = {item.id for item, _ in res.matched_pairs}
         for item in gt.findings:
@@ -96,7 +106,7 @@ def score_tool(
             _ratio(class_tp.get(k, 0), class_tp.get(k, 0) + class_fn.get(k, 0)),
             _ratio(class_tp.get(k, 0), class_tp.get(k, 0) + class_fp.get(k, 0)),
         )
-        for k in set(class_tp) | set(class_fn)
+        for k in set(class_tp) | set(class_fn) | set(class_fp)
     }
     by_eco = {
         k: (
