@@ -96,3 +96,38 @@ Top-level `README.md` corpus section replaced with:
 
 None. The pyright version-upgrade warning (`v1.1.410 -> v1.1.411`) is cosmetic
 and does not affect the check result.
+
+---
+
+## Fix 2 Addendum (SCA-426 follow-up corrections)
+
+### awk line check
+
+```
+28:         // SAST target: SQL injection — CWE-89
+29:         String sql = "SELECT * FROM users WHERE name = '" + name + "'";
+30:         try (Connection conn = getConnection();
+```
+
+The comment is on line 28; the string-concat assignment (the actual sink) is on line 29.
+The groundtruth.yaml `F1 line: 29` was already correct — no change needed.
+
+### Edits applied
+
+1. **`README.md` (top-level) line 98-99**: Replaced inaccurate "exploitability triad
+   (network-reachable / user-controlled / no-auth-bypass)" with accurate "`exploitability`
+   label (`true-positive` / `mitigated-by-design` / `false-positive`)".
+
+2. **`corpus/java/java-rest-api/groundtruth.yaml`**: No change — F1 `line: 29` was
+   already pointing at the sink line.
+
+3. **`corpus/java/java-rest-api/README.md`**: No change — table row already shows `29`.
+
+### Full-suite verification
+
+```
+50 passed in 0.95s
+```
+
+- `uv run ruff check .`: All checks passed
+- `uv run pyright`: 0 errors, 0 warnings, 0 informations

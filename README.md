@@ -95,8 +95,8 @@ The two **larger multi-file apps** (`py-rest-api`, `java-rest-api`) each embed â
 findings spanning â‰¥3 source files, exercising cross-file taint tracking.
 
 Each corpus package contains a `groundtruth.yaml` that declares every true-positive
-finding with its CWE class, ecosystem, severity, exploitability triad
-(network-reachable / user-controlled / no-auth-bypass), and remediation advice.
+finding with its CWE class, ecosystem, severity, and an `exploitability` label
+(`true-positive` / `mitigated-by-design` / `false-positive`), and remediation advice.
 The schema lives in `schema/groundtruth.schema.json`.
 
 ---
