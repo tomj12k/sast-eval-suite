@@ -59,7 +59,7 @@ secrets as deliberate scan targets.**
 Each corpus package contains a `groundtruth.yaml` that declares every true-positive
 finding with its CWE class, ecosystem, severity, exploitability triad
 (network-reachable / user-controlled / no-auth-bypass), and remediation advice.
-The schema lives in `schema/groundtruth-schema.json`.
+The schema lives in `schema/groundtruth.schema.json`.
 
 ---
 
