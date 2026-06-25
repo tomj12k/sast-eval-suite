@@ -1,0 +1,13 @@
+package: java-deserialization
+language: java
+ecosystem: maven
+findings:
+  - id: F1
+    file: src/main/java/com/example/Worker.java
+    line: 10
+    cwe: CWE-502
+    class: insecure-deserialization
+    severity: HIGH
+    exploitability: true-positive
+    notes: ObjectInputStream.readObject() on untrusted bytes -> remote code execution
+sca: []

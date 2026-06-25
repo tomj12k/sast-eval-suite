@@ -1,0 +1,13 @@
+package: java-xxe
+language: java
+ecosystem: maven
+findings:
+  - id: F1
+    file: src/main/java/com/example/XmlParser.java
+    line: 13
+    cwe: CWE-611
+    class: xxe
+    severity: HIGH
+    exploitability: true-positive
+    notes: DocumentBuilderFactory without DTD/external-entity restrictions parses untrusted XML -> XXE
+sca: []
