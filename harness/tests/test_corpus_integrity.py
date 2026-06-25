@@ -42,6 +42,12 @@ def test_rust_ruby_corpus_present():
     assert {"rust-sca-old", "ruby-sca-old", "ruby-cmdi"} <= names
 
 
+def test_dotnet_corpus_present():
+    from eval_suite.groundtruth import discover_corpus
+    names = {g.package for g in discover_corpus(CORPUS)}
+    assert {"dotnet-sca-old", "dotnet-sqli"} <= names
+
+
 def test_schema_accepts_new_ecosystems():
     import json
     from pathlib import Path

@@ -1,0 +1,10 @@
+package: dotnet-sca-old
+language: csharp
+ecosystem: nuget
+findings: []
+sca:
+  - name: Newtonsoft.Json
+    version: 12.0.1
+    ecosystem: nuget
+    cve: CVE-2024-21907
+    severity: HIGH

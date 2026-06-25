@@ -1,0 +1,13 @@
+package: dotnet-sqli
+language: csharp
+ecosystem: nuget
+findings:
+  - id: F1
+    file: Program.cs
+    line: 8
+    cwe: CWE-89
+    class: sql-injection
+    severity: HIGH
+    exploitability: true-positive
+    notes: string-concatenated SQL passed to SqlCommand
+sca: []
