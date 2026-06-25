@@ -39,7 +39,7 @@ def render_markdown(scores: list[ToolScore]) -> str:
     for s in scores:
         triage = "n/a" if s.triage_accuracy is None else f"{s.triage_accuracy:.2f}"
         rem = "n/a" if s.remediation_coverage is None else f"{s.remediation_coverage:.2f}"
-        lines.append(f"| {s.tool} | {s.recall} | {s.precision} | {triage} | {rem} |")
+        lines.append(f"| {s.tool} | {s.recall:.2f} | {s.precision:.2f} | {triage} | {rem} |")
     lines.append("")
     lines.append("## Recall by class")
     lines.append("")
