@@ -1,0 +1,13 @@
+package: py-xxe
+language: python
+ecosystem: pypi
+findings:
+  - id: F1
+    file: parser.py
+    line: 8
+    cwe: CWE-611
+    class: xxe
+    severity: HIGH
+    exploitability: true-positive
+    notes: XMLParser created with resolve_entities=True and no_network=False on untrusted XML
+sca: []

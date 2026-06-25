@@ -1,0 +1,13 @@
+package: py-ssti
+language: python
+ecosystem: pypi
+findings:
+  - id: F1
+    file: app.py
+    line: 13
+    cwe: CWE-1336
+    class: ssti
+    severity: HIGH
+    exploitability: true-positive
+    notes: user input concatenated into render_template_string allowing server-side template injection
+sca: []

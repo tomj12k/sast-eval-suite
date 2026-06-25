@@ -1,0 +1,13 @@
+package: py-deserialization
+language: python
+ecosystem: pypi
+findings:
+  - id: F1
+    file: worker.py
+    line: 8
+    cwe: CWE-502
+    class: insecure-deserialization
+    severity: HIGH
+    exploitability: true-positive
+    notes: untrusted bytes passed to pickle.loads allowing arbitrary code execution
+sca: []

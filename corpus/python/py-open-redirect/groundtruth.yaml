@@ -1,0 +1,29 @@
+package: py-open-redirect
+language: python
+ecosystem: pypi
+findings:
+  - id: F1
+    file: app.py
+    line: 16
+    cwe: CWE-601
+    class: open-redirect
+    severity: HIGH
+    exploitability: true-positive
+    notes: user-controlled redirect target with no validation in go() route
+  - id: F2
+    file: app.py
+    line: 24
+    cwe: CWE-601
+    class: open-redirect
+    severity: HIGH
+    exploitability: mitigated-by-design
+    notes: redirect target validated against allowlist of permitted hostnames in go_safe() route
+  - id: F3
+    file: app.py
+    line: 31
+    cwe: CWE-601
+    class: open-redirect
+    severity: HIGH
+    exploitability: false-positive
+    notes: static literal redirect target not user-controlled in home() route
+sca: []
