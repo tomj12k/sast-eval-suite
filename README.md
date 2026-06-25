@@ -42,7 +42,7 @@ secrets as deliberate scan targets.**
 │   │   ├── py-xxe/             # XML external entity (CWE-611)
 │   │   ├── py-open-redirect/   # open redirect (CWE-601)
 │   │   └── py-rest-api/        # LARGER multi-file REST service
-│   │                           #   (SQLi, SSRF, IDOR, XSS across ≥3 files)
+│   │                           #   (SQLi, SSRF, IDOR, open-redirect across ≥3 files)
 │   ├── java/               # Java packages (ecosystem: maven)
 │   │   ├── java-sca-maven-old/     # SCA: outdated Maven deps
 │   │   ├── java-cmdi-sqli/         # command injection + SQL injection
