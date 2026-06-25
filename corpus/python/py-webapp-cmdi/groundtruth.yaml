@@ -1,0 +1,13 @@
+package: py-webapp-cmdi
+language: python
+ecosystem: pypi
+findings:
+  - id: F1
+    file: app.py
+    line: 14
+    cwe: CWE-78
+    class: command-injection
+    severity: HIGH
+    exploitability: true-positive
+    notes: user-controlled host in shell=True command
+sca: []

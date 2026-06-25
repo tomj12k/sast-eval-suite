@@ -1,0 +1,21 @@
+package: py-noentry-lib
+language: python
+ecosystem: pypi
+findings:
+  - id: F1
+    file: fetcher.py
+    line: 8
+    cwe: CWE-918
+    class: ssrf
+    severity: HIGH
+    exploitability: true-positive
+    notes: caller-supplied URL, no allowlist; no web entry point (RC01)
+  - id: F2
+    file: fetcher.py
+    line: 15
+    cwe: CWE-22
+    class: path-traversal
+    severity: HIGH
+    exploitability: true-positive
+    notes: unnormalized path join
+sca: []

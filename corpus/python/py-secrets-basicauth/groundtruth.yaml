@@ -1,0 +1,21 @@
+package: py-secrets-basicauth
+language: python
+ecosystem: pypi
+findings:
+  - id: F1
+    file: config.py
+    line: 4
+    cwe: CWE-798
+    class: secret-basic-auth-url
+    severity: HIGH
+    exploitability: true-positive
+    notes: basic-auth-in-URL (RC03)
+  - id: F2
+    file: config.py
+    line: 7
+    cwe: CWE-798
+    class: secret-api-key
+    severity: HIGH
+    exploitability: true-positive
+    notes: hardcoded live API key
+sca: []

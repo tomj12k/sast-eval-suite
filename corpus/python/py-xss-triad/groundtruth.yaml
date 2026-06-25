@@ -1,0 +1,29 @@
+package: py-xss-triad
+language: python
+ecosystem: pypi
+findings:
+  - id: F1
+    file: app.py
+    line: 113
+    cwe: CWE-79
+    class: xss-reflected
+    severity: HIGH
+    exploitability: true-positive
+    notes: user input rendered without escaping
+  - id: F2
+    file: app.py
+    line: 118
+    cwe: CWE-79
+    class: xss-reflected
+    severity: HIGH
+    exploitability: mitigated-by-design
+    notes: flask.escape applied
+  - id: F3
+    file: app.py
+    line: 128
+    cwe: CWE-79
+    class: xss-reflected
+    severity: HIGH
+    exploitability: false-positive
+    notes: static literal, not user-controlled
+sca: []

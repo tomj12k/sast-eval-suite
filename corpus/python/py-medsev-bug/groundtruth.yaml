@@ -1,0 +1,13 @@
+package: py-medsev-bug
+language: python
+ecosystem: pypi
+findings:
+  - id: F1
+    file: crypto_util.py
+    line: 7
+    cwe: CWE-327
+    class: weak-hash
+    severity: MEDIUM
+    exploitability: true-positive
+    notes: MD5 for security fingerprint (RC04 remediation-gate target)
+sca: []

@@ -1,0 +1,20 @@
+package: py-sca-pypi-old
+language: python
+ecosystem: pypi
+findings: []
+sca:
+  - name: requests
+    version: 2.5.0
+    ecosystem: pypi
+    cve: CVE-2018-18074
+    severity: HIGH
+  - name: pyyaml
+    version: "5.3"
+    ecosystem: pypi
+    cve: CVE-2020-14343
+    severity: CRITICAL
+  - name: jinja2
+    version: "2.10"
+    ecosystem: pypi
+    cve: CVE-2019-10906
+    severity: HIGH
