@@ -68,6 +68,14 @@ def test_py_rest_api_present_and_multifile():
     assert len(files) >= 3  # ground truth spans multiple files
 
 
+def test_java_rest_api_present_and_multifile():
+    from eval_suite.groundtruth import discover_corpus
+    gts = {g.package: g for g in discover_corpus(CORPUS)}
+    assert "java-rest-api" in gts
+    files = {f.file for f in gts["java-rest-api"].findings}
+    assert len(files) >= 3
+
+
 def test_schema_accepts_new_ecosystems():
     import json
     from pathlib import Path

@@ -1,0 +1,53 @@
+package: java-rest-api
+language: java
+ecosystem: maven
+findings:
+  - id: F1
+    file: src/main/java/com/example/UserRepository.java
+    line: 29
+    cwe: CWE-89
+    class: sql-injection
+    severity: HIGH
+    exploitability: true-positive
+    notes: >
+      findByName() concatenates caller-supplied name directly into a SQL string
+      executed via Statement.executeQuery(). An attacker can inject arbitrary SQL
+      through the name parameter.
+
+  - id: F2
+    file: src/main/java/com/example/FetchClient.java
+    line: 24
+    cwe: CWE-918
+    class: ssrf
+    severity: HIGH
+    exploitability: true-positive
+    notes: >
+      fetch() calls new URL(url).openStream() where url is supplied by the caller
+      with no scheme allowlist or host validation. An attacker can redirect the
+      server to reach internal services such as cloud metadata endpoints.
+
+  - id: F3
+    file: src/main/java/com/example/Controller.java
+    line: 22
+    cwe: CWE-639
+    class: broken-access-control
+    severity: HIGH
+    exploitability: true-positive
+    notes: >
+      getProfile() accepts a caller-supplied id and fetches any user record with
+      no ownership check or session validation. An authenticated user can read
+      arbitrary profiles by supplying another user's id.
+
+  - id: F4
+    file: src/main/java/com/example/AppConfig.java
+    line: 12
+    cwe: CWE-798
+    class: hardcoded-secret
+    severity: HIGH
+    exploitability: true-positive
+    notes: >
+      API_KEY is a static final field initialised with a literal string
+      "hardcoded-api-key-do-not-use". The secret is embedded in the compiled
+      class and visible in the source tree.
+
+sca: []

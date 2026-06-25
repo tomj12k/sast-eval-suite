@@ -30,13 +30,37 @@ secrets as deliberate scan targets.**
 ```
 .
 ├── corpus/                 # Authored vulnerable packages (the "test fixtures")
-│   ├── python/             # Python packages
-│   │   ├── py-webapp-cmdi/ # Example: command-injection web app
-│   │   │   ├── groundtruth.yaml
-│   │   │   └── src/
-│   │   └── …
-│   └── java/               # Java packages
-│       └── …
+│   ├── python/             # Python packages (ecosystem: pypi)
+│   │   ├── py-webapp-cmdi/     # command injection
+│   │   ├── py-noentry-lib/     # path traversal / no-entry
+│   │   ├── py-sca-pypi-old/    # SCA: outdated PyPI deps
+│   │   ├── py-secrets-basicauth/  # hardcoded basic-auth secret
+│   │   ├── py-xss-triad/       # XSS (three patterns)
+│   │   ├── py-medsev-bug/      # medium-severity SAST bug
+│   │   ├── py-deserialization/ # insecure deserialization (CWE-502)
+│   │   ├── py-ssti/            # server-side template injection (CWE-94)
+│   │   ├── py-xxe/             # XML external entity (CWE-611)
+│   │   ├── py-open-redirect/   # open redirect (CWE-601)
+│   │   └── py-rest-api/        # LARGER multi-file REST service
+│   │                           #   (SQLi, SSRF, IDOR, XSS across ≥3 files)
+│   ├── java/               # Java packages (ecosystem: maven)
+│   │   ├── java-sca-maven-old/     # SCA: outdated Maven deps
+│   │   ├── java-cmdi-sqli/         # command injection + SQL injection
+│   │   ├── java-deserialization/   # insecure deserialization (CWE-502)
+│   │   ├── java-xxe/               # XML external entity (CWE-611)
+│   │   └── java-rest-api/          # LARGER multi-file Spring-style service
+│   │                               #   (SQLi, SSRF, IDOR, hardcoded secret ≥4 files)
+│   ├── go/                 # Go packages (ecosystem: go)
+│   │   ├── go-sca-old/     # SCA: vulnerable jwt-go dep
+│   │   └── go-cmdi/        # command injection
+│   ├── rust/               # Rust packages (ecosystem: cargo)
+│   │   └── rust-sca-old/   # SCA: time crate RUSTSEC advisory
+│   ├── ruby/               # Ruby packages (ecosystem: rubygems)
+│   │   ├── ruby-sca-old/   # SCA: rack CVE
+│   │   └── ruby-cmdi/      # command injection
+│   └── dotnet/             # .NET packages (ecosystem: nuget)
+│       ├── dotnet-sca-old/ # SCA: Newtonsoft.Json CVE
+│       └── dotnet-sqli/    # SQL injection
 ├── harness/                # Scoring engine (the "test harness")
 │   ├── src/eval_suite/     # Python package
 │   │   ├── cli.py          # eval-suite entry point
@@ -46,7 +70,7 @@ secrets as deliberate scan targets.**
 │   │   ├── runners/        # Per-tool scan wrappers (semgrep, trivy, osv, …)
 │   │   ├── score/          # match.py + metrics.py (recall/precision/ToolScore)
 │   │   └── report/         # render.py (Markdown + JSON) + trend.py
-│   └── tests/              # pytest suite (42+ tests)
+│   └── tests/              # pytest suite (50+ tests)
 ├── schema/                 # groundtruth.yaml JSON Schema
 ├── results/                # Generated outputs (gitignored)
 │   ├── report.md           # Human-readable per-tool scoring table
@@ -55,6 +79,20 @@ secrets as deliberate scan targets.**
 └── .github/workflows/
     └── eval.yml            # CI: lint/type/test + free-CLI baseline scan
 ```
+
+### Corpus inventory summary
+
+| Ecosystem | Packages | SAST classes covered | SCA |
+|-----------|----------|----------------------|-----|
+| Python (pypi) | 11 | cmdi, path-traversal, hardcoded-secret, xss, deserialization, ssti, xxe, open-redirect, sql-injection, ssrf, idor | yes |
+| Java (maven) | 5 | cmdi, sql-injection, deserialization, xxe, ssrf, idor, hardcoded-secret | yes |
+| Go (go) | 2 | cmdi | yes |
+| Rust (cargo) | 1 | — | yes |
+| Ruby (rubygems) | 2 | cmdi | yes |
+| .NET (nuget) | 2 | sql-injection | yes |
+
+The two **larger multi-file apps** (`py-rest-api`, `java-rest-api`) each embed ≥4
+findings spanning ≥3 source files, exercising cross-file taint tracking.
 
 Each corpus package contains a `groundtruth.yaml` that declares every true-positive
 finding with its CWE class, ecosystem, severity, exploitability triad
