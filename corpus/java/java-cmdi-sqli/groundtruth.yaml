@@ -1,0 +1,21 @@
+package: java-cmdi-sqli
+language: java
+ecosystem: maven
+findings:
+  - id: F1
+    file: src/main/java/com/example/App.java
+    line: 9
+    cwe: CWE-78
+    class: command-injection
+    severity: HIGH
+    exploitability: true-positive
+    notes: user-controlled host in Runtime.exec
+  - id: F2
+    file: src/main/java/com/example/App.java
+    line: 16
+    cwe: CWE-89
+    class: sql-injection
+    severity: HIGH
+    exploitability: true-positive
+    notes: string-concatenated SQL
+sca: []

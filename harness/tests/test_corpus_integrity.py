@@ -22,3 +22,9 @@ def test_python_corpus_has_expected_packages():
     names = {g.package for g in discover_corpus(CORPUS)}
     assert {"py-webapp-cmdi", "py-noentry-lib", "py-sca-pypi-old",
             "py-secrets-basicauth", "py-xss-triad", "py-medsev-bug"} <= names
+
+
+def test_java_corpus_has_expected_packages():
+    from eval_suite.groundtruth import discover_corpus
+    names = {g.package for g in discover_corpus(CORPUS)}
+    assert {"java-sca-maven-old", "java-cmdi-sqli"} <= names
