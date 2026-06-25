@@ -6,8 +6,8 @@
   "additionalProperties": false,
   "properties": {
     "package": {"type": "string"},
-    "language": {"enum": ["python", "java"]},
-    "ecosystem": {"enum": ["pypi", "maven"]},
+    "language": {"enum": ["python", "java", "go", "rust", "ruby", "csharp"]},
+    "ecosystem": {"enum": ["pypi", "maven", "go", "cargo", "rubygems", "nuget"]},
     "findings": {
       "type": "array",
       "items": {
@@ -36,7 +36,7 @@
           "name": {"type": "string"},
           "version": {"type": "string"},
           "cve": {"type": "string"},
-          "ecosystem": {"enum": ["pypi", "maven"]},
+          "ecosystem": {"enum": ["pypi", "maven", "go", "cargo", "rubygems", "nuget"]},
           "severity": {"enum": ["CRITICAL", "HIGH", "MEDIUM", "LOW"]}
         }
       }

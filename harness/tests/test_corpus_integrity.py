@@ -28,3 +28,22 @@ def test_java_corpus_has_expected_packages():
     from eval_suite.groundtruth import discover_corpus
     names = {g.package for g in discover_corpus(CORPUS)}
     assert {"java-sca-maven-old", "java-cmdi-sqli"} <= names
+
+
+def test_schema_accepts_new_ecosystems():
+    import json
+    from pathlib import Path
+
+    import jsonschema
+
+    schema = json.loads(
+        (Path(__file__).resolve().parents[2] / "schema" / "groundtruth.schema.json").read_text()
+    )
+    sample = {
+        "package": "go-sca-old",
+        "language": "go",
+        "ecosystem": "go",
+        "findings": [],
+        "sca": [{"name": "x", "version": "1.0.0", "ecosystem": "go"}],
+    }
+    jsonschema.validate(sample, schema)  # must not raise
