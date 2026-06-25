@@ -1,0 +1,75 @@
+package: py-rest-api
+language: python
+ecosystem: pypi
+findings:
+  - id: F1
+    file: db.py
+    line: 19
+    cwe: CWE-89
+    class: sql-injection
+    severity: HIGH
+    exploitability: true-positive
+    notes: >
+      get_user() interpolates caller-supplied name directly into an f-string SQL
+      query. An attacker can inject arbitrary SQL via the username field.
+
+  - id: F2
+    file: db.py
+    line: 32
+    cwe: CWE-89
+    class: sql-injection
+    severity: HIGH
+    exploitability: mitigated-by-design
+    notes: >
+      get_user_safe() uses a parameterised query (? placeholder). The name value
+      is bound by the SQLite driver and never interpolated into the query string,
+      so SQL injection is not possible here.
+
+  - id: F3
+    file: fetch.py
+    line: 13
+    cwe: CWE-918
+    class: ssrf
+    severity: HIGH
+    exploitability: true-positive
+    notes: >
+      fetch_avatar() calls requests.get(url) where url is supplied by the HTTP
+      caller with no allowlist or scheme validation. An attacker can reach
+      internal services such as the AWS instance metadata endpoint.
+
+  - id: F4
+    file: app.py
+    line: 31
+    cwe: CWE-639
+    class: broken-access-control
+    severity: HIGH
+    exploitability: true-positive
+    notes: >
+      user_profile() fetches any user record by the id taken from the URL path
+      without verifying that the authenticated session owns that id. Any logged-in
+      user can enumerate other users' profiles (IDOR).
+
+  - id: F5
+    file: config.py
+    line: 5
+    cwe: CWE-798
+    class: hardcoded-secret
+    severity: HIGH
+    exploitability: true-positive
+    notes: >
+      SECRET_KEY is a hardcoded string literal committed to source control.
+      Knowledge of this value allows an attacker to forge Flask session cookies
+      and impersonate arbitrary users.
+
+  - id: F6
+    file: app.py
+    line: 55
+    cwe: CWE-601
+    class: open-redirect
+    severity: LOW
+    exploitability: false-positive
+    notes: >
+      logout() returns redirect("/login") where the target is a static string
+      literal, not user-controlled. A scanner that flags all redirect() calls
+      without checking the argument would produce a false positive here.
+sca: []

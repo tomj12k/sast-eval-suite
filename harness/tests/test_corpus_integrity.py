@@ -60,6 +60,14 @@ def test_java_v2_classes_present():
     assert {"java-deserialization", "java-xxe"} <= names
 
 
+def test_py_rest_api_present_and_multifile():
+    from eval_suite.groundtruth import discover_corpus
+    gts = {g.package: g for g in discover_corpus(CORPUS)}
+    assert "py-rest-api" in gts
+    files = {f.file for f in gts["py-rest-api"].findings}
+    assert len(files) >= 3  # ground truth spans multiple files
+
+
 def test_schema_accepts_new_ecosystems():
     import json
     from pathlib import Path
