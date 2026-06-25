@@ -30,6 +30,12 @@ def test_java_corpus_has_expected_packages():
     assert {"java-sca-maven-old", "java-cmdi-sqli"} <= names
 
 
+def test_go_corpus_present():
+    from eval_suite.groundtruth import discover_corpus
+    names = {g.package for g in discover_corpus(CORPUS)}
+    assert {"go-sca-old", "go-cmdi"} <= names
+
+
 def test_schema_accepts_new_ecosystems():
     import json
     from pathlib import Path

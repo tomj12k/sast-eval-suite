@@ -1,0 +1,10 @@
+package: go-sca-old
+language: go
+ecosystem: go
+findings: []
+sca:
+  - name: github.com/dgrijalva/jwt-go
+    version: v3.2.0+incompatible
+    ecosystem: go
+    cve: CVE-2020-26160
+    severity: HIGH

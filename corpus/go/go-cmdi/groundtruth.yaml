@@ -1,0 +1,13 @@
+package: go-cmdi
+language: go
+ecosystem: go
+findings:
+  - id: F1
+    file: main.go
+    line: 12
+    cwe: CWE-78
+    class: command-injection
+    severity: HIGH
+    exploitability: true-positive
+    notes: user-controlled host interpolated into exec.Command bash -c
+sca: []
