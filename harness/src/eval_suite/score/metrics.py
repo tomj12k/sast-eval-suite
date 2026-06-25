@@ -41,7 +41,6 @@ def score_tool(
     class_fp: dict[str, int] = {}
     eco_tp: dict[str, int] = {}
     eco_fn: dict[str, int] = {}
-    eco_fp: dict[str, int] = {}
     triage_total = triage_ok = 0
     remediable_total = remediable_ok = 0
 
@@ -53,9 +52,12 @@ def score_tool(
         fn += sast_fn
         fp += sast_fp
 
-        eco_tp[gt.ecosystem] = eco_tp.get(gt.ecosystem, 0) + sast_tp
-        eco_fn[gt.ecosystem] = eco_fn.get(gt.ecosystem, 0) + sast_fn
-        eco_fp[gt.ecosystem] = eco_fp.get(gt.ecosystem, 0) + sast_fp
+        # by_ecosystem tracks SCA recall/precision only; SAST is tracked by by_class.
+        sca_tp_count = len(res.sca_tp)
+        sca_fn_count = len(res.sca_fn)
+        if sca_tp_count or sca_fn_count:
+            eco_tp[gt.ecosystem] = eco_tp.get(gt.ecosystem, 0) + sca_tp_count
+            eco_fn[gt.ecosystem] = eco_fn.get(gt.ecosystem, 0) + sca_fn_count
 
         for item, _f in res.matched_pairs:
             class_tp[item.klass] = class_tp.get(item.klass, 0) + 1
@@ -111,7 +113,7 @@ def score_tool(
     by_eco = {
         k: (
             _ratio(eco_tp.get(k, 0), eco_tp.get(k, 0) + eco_fn.get(k, 0)),
-            _ratio(eco_tp.get(k, 0), eco_tp.get(k, 0) + eco_fp.get(k, 0)),
+            _ratio(eco_tp.get(k, 0), eco_tp.get(k, 0)),  # precision = tp/(tp+0) for SCA
         )
         for k in set(eco_tp) | set(eco_fn)
     }
