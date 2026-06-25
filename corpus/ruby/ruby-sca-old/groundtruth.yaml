@@ -1,0 +1,10 @@
+package: ruby-sca-old
+language: ruby
+ecosystem: rubygems
+findings: []
+sca:
+  - name: rack
+    version: 2.0.5
+    ecosystem: rubygems
+    cve: CVE-2019-16782
+    severity: MEDIUM

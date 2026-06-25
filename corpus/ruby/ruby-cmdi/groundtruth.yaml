@@ -1,0 +1,13 @@
+package: ruby-cmdi
+language: ruby
+ecosystem: rubygems
+findings:
+  - id: F1
+    file: app.rb
+    line: 7
+    cwe: CWE-78
+    class: command-injection
+    severity: HIGH
+    exploitability: true-positive
+    notes: user-controlled host in backtick command
+sca: []

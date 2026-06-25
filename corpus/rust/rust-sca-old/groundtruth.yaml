@@ -1,0 +1,10 @@
+package: rust-sca-old
+language: rust
+ecosystem: cargo
+findings: []
+sca:
+  - name: time
+    version: 0.1.43
+    ecosystem: cargo
+    cve: RUSTSEC-2020-0071
+    severity: MEDIUM

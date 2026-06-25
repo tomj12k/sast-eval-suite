@@ -1,0 +1,7 @@
+[package]
+name = "rust-sca-old"
+version = "0.0.1"
+edition = "2021"
+
+[dependencies]
+time = "=0.1.43"
