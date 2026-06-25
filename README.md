@@ -179,17 +179,15 @@ A Markdown table with one row per tool showing:
 
 ### `results/trend.json`
 
-A newline-delimited JSON series, one entry per `eval-suite` run, keyed by `--stamp`.
+A JSON array of run-summary objects, one per `eval-suite` run, each keyed by `--stamp`.
 Used by `--fail-on-regression` to detect recall drops vs. the previous baseline.
 
-```bash
+```python
 # Show the last 5 runs
-python3 -c "
 import json, pathlib
-for line in pathlib.Path('results/trend.json').read_text().splitlines()[-5:]:
-    r = json.loads(line)
-    print(r['stamp'], {t['tool']: round(t['recall'], 3) for t in r['scores']})
-"
+runs = json.loads(pathlib.Path('results/trend.json').read_text())
+for run in runs[-5:]:
+    print(run['stamp'], {tool: round(score['recall'], 3) for tool, score in run['tools'].items()})
 ```
 
 ---
