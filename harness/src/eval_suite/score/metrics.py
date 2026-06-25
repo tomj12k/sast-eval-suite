@@ -113,7 +113,7 @@ def score_tool(
     by_eco = {
         k: (
             _ratio(eco_tp.get(k, 0), eco_tp.get(k, 0) + eco_fn.get(k, 0)),
-            _ratio(eco_tp.get(k, 0), eco_tp.get(k, 0)),  # precision = tp/(tp+0) for SCA
+            _ratio(eco_tp.get(k, 0), eco_tp.get(k, 0)),  # by_ecosystem covers SCA only; unmatched SCA findings are not tracked as FPs (res.fp holds only SAST/secret), so the per-ecosystem FP term is structurally zero.
         )
         for k in set(eco_tp) | set(eco_fn)
     }

@@ -111,7 +111,7 @@ def test_rc04_remediation_gate_on_medium() -> None:
     scn = _score("scntnms")
     # The MEDIUM finding matched but carried no remediation.
     assert scn.remediation_coverage is not None  # type: ignore[union-attr]
-    assert scn.remediation_coverage < 1.0  # type: ignore[union-attr]
+    assert scn.remediation_coverage == 0.0  # type: ignore[union-attr]
 
 
 def test_rc05_triage_fails_on_fp_decoy() -> None:
