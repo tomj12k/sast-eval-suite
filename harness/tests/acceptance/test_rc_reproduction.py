@@ -12,13 +12,45 @@ Each test asserts one root-cause from the initial evaluation round:
 
 from __future__ import annotations
 
+import os
 from pathlib import Path
+
+import pytest
 
 from eval_suite.cli import score_corpus
 from eval_suite.models import Finding
 
 # parents[3]: acceptance/ -> tests/ -> harness/ -> repo-root
-CORPUS = Path(__file__).resolve().parents[3] / "corpus"
+_REPO_ROOT = Path(__file__).resolve().parents[3]
+_CORPUS_ROOT = _REPO_ROOT / "corpus"
+
+# The 6 packages that the RC reproduction claims cover exactly; isolated so
+# corpus growth cannot change per-class / per-ecosystem recall.
+_RC_PACKAGES: dict[str, Path] = {
+    "py-noentry-lib":     _CORPUS_ROOT / "python" / "py-noentry-lib",
+    "py-sca-pypi-old":    _CORPUS_ROOT / "python" / "py-sca-pypi-old",
+    "java-sca-maven-old": _CORPUS_ROOT / "java"   / "java-sca-maven-old",
+    "py-secrets-basicauth": _CORPUS_ROOT / "python" / "py-secrets-basicauth",
+    "py-medsev-bug":      _CORPUS_ROOT / "python" / "py-medsev-bug",
+    "py-xss-triad":       _CORPUS_ROOT / "python" / "py-xss-triad",
+}
+
+
+@pytest.fixture(scope="module")
+def rc_corpus(tmp_path_factory: pytest.TempPathFactory) -> Path:
+    """Build a temporary corpus dir containing only the 6 RC packages.
+
+    discover_corpus uses rglob("groundtruth.yaml") which does not follow
+    directory symlinks on Python 3.13+.  Instead we create a real stub
+    directory per package and symlink only the groundtruth.yaml file into it,
+    which rglob finds without needing to traverse a symlinked directory.
+    """
+    tmp = tmp_path_factory.mktemp("rc_corpus")
+    for name, src in _RC_PACKAGES.items():
+        pkg_dir = tmp / name
+        pkg_dir.mkdir()
+        os.symlink(src / "groundtruth.yaml", pkg_dir / "groundtruth.yaml")
+    return tmp
 
 
 def _scn(**kw: object) -> Finding:
@@ -76,46 +108,46 @@ def _by_package() -> dict[str, dict[str, list[Finding]]]:
     }
 
 
-def _score(tool: str) -> object:
-    scores = score_corpus(CORPUS, _by_package())
+def _score(rc_corpus: Path, tool: str) -> object:
+    scores = score_corpus(rc_corpus, _by_package())
     return next(s for s in scores if s.tool == tool)
 
 
-def test_rc01_joern_silent_zero() -> None:
+def test_rc01_joern_silent_zero(rc_corpus: Path) -> None:
     """RC01: scntnms returns nothing for the SSRF class; a competitor detects it."""
-    scn = _score("scntnms")
+    scn = _score(rc_corpus, "scntnms")
     # Scantonomous catches nothing for ssrf; a competitor does.
     assert scn.by_class.get("ssrf", (0.0, 0.0))[0] == 0.0  # type: ignore[union-attr]
-    assert _score("semgrep").by_class["ssrf"][0] == 1.0  # type: ignore[union-attr]
+    assert _score(rc_corpus, "semgrep").by_class["ssrf"][0] == 1.0  # type: ignore[union-attr]
 
 
-def test_rc02_non_maven_sca_gap() -> None:
+def test_rc02_non_maven_sca_gap(rc_corpus: Path) -> None:
     """RC02: scntnms ODC misses PyPI SCA; competitor catches it; Maven IS caught."""
-    scn = _score("scntnms")
-    osv = _score("osv-scanner")
+    scn = _score(rc_corpus, "scntnms")
+    osv = _score(rc_corpus, "osv-scanner")
     # PyPI ecosystem recall: scntnms 0, competitor 1; Maven recall for scntnms 1.
     assert scn.by_ecosystem.get("pypi", (0.0, 0.0))[0] == 0.0  # type: ignore[union-attr]
     assert osv.by_ecosystem["pypi"][0] == 1.0  # type: ignore[union-attr]
     assert scn.by_ecosystem["maven"][0] == 1.0  # type: ignore[union-attr]
 
 
-def test_rc03_basic_auth_secret_gap() -> None:
+def test_rc03_basic_auth_secret_gap(rc_corpus: Path) -> None:
     """RC03: scntnms has no basic-auth-URL secret rule; trivy catches it."""
-    scn = _score("scntnms")
+    scn = _score(rc_corpus, "scntnms")
     assert scn.by_class.get("secret-basic-auth-url", (0.0, 0.0))[0] == 0.0  # type: ignore[union-attr]
-    assert _score("trivy").by_class["secret-basic-auth-url"][0] == 1.0  # type: ignore[union-attr]
+    assert _score(rc_corpus, "trivy").by_class["secret-basic-auth-url"][0] == 1.0  # type: ignore[union-attr]
 
 
-def test_rc04_remediation_gate_on_medium() -> None:
+def test_rc04_remediation_gate_on_medium(rc_corpus: Path) -> None:
     """RC04: the MEDIUM finding matched but carried no remediation guidance."""
-    scn = _score("scntnms")
+    scn = _score(rc_corpus, "scntnms")
     # The MEDIUM finding matched but carried no remediation.
     assert scn.remediation_coverage is not None  # type: ignore[union-attr]
     assert scn.remediation_coverage == 0.0  # type: ignore[union-attr]
 
 
-def test_rc05_triage_fails_on_fp_decoy() -> None:
+def test_rc05_triage_fails_on_fp_decoy(rc_corpus: Path) -> None:
     """RC05: scntnms reports the XSS FP decoy (line 128), hurting triage accuracy."""
-    scn = _score("scntnms")
+    scn = _score(rc_corpus, "scntnms")
     assert scn.triage_accuracy is not None  # type: ignore[union-attr]
     assert scn.triage_accuracy < 1.0  # type: ignore[union-attr]
